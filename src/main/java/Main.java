@@ -57,10 +57,6 @@ public class Main {
         String[] validCmds = {"exit", "type", "echo"};
         String path = getPath(input[1]);
 
-        if (path != null) {
-            System.out.println(input[1] + " is " + path);
-            return;
-        }
 
         for (String s: validCmds) {
             if (input[1].equals(s)) {
@@ -69,6 +65,10 @@ public class Main {
             }
         }
 
+        if (path != null) {
+            System.out.println(input[1] + " is " + path);
+            return;
+        }
         System.out.println(input[1] + ": not found");
     }
 }
