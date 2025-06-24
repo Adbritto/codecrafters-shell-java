@@ -1,4 +1,7 @@
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Scanner;
 
 public class Main {
@@ -14,7 +17,7 @@ public class Main {
                 case "exit" -> System.exit(Integer.parseInt(commands[1]));
                 case "type" -> type(commands);
                 case "echo" -> echo(input);
-                default -> printCNF(commands[0]);
+                default -> printCNF(commands);
             }
         }
     }
@@ -23,26 +26,44 @@ public class Main {
         System.out.println(input.substring(5));
     }
 
-    static void printCNF(String input) {
-        System.out.println(input + ": command not found");
+    static void printCNF(String[] input) {
+        if (getPath(input[0]) != null) {
+            try {
+                Process process = Runtime.getRuntime().exec(input);
+                process.getInputStream().transferTo(System.out);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        System.err.println(input[0] + ": command not found");
+    }
+
+    static String getPath(String input) {
+        String pathInput = System.getenv("PATH");
+        String[] pathCommands = pathInput.split(File.pathSeparator);
+
+        for (String p: pathCommands) {
+            Path fullPath = Path.of(p, input);
+            if (Files.isRegularFile(fullPath)) {
+                return fullPath.toString();
+            }
+        }
+        return null;
     }
 
     static void type(String[] input) {
         String[] validCmds = {"exit", "type", "echo"};
-        String pathInput = System.getenv("PATH");
-        String[] pathCommands = pathInput.split(":");
+        String path = getPath(input[0]);
+
+        if (path != null) {
+            System.out.println(input[1] + " is " + path);
+            return;
+        }
 
         for (String s: validCmds) {
             if (input[1].equals(s)) {
                 System.out.println(input[1] + " is a shell builtin");
-                return;
-            }
-        }
-
-        for (String s: pathCommands) {
-            File file = new File(s, input[1]);
-            if(file.exists()) {
-                System.out.println(input[1] + " is " + file.getAbsolutePath());
                 return;
             }
         }
