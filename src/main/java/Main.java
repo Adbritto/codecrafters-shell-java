@@ -31,6 +31,7 @@ public class Main {
             try {
                 Process process = Runtime.getRuntime().exec(input);
                 process.getInputStream().transferTo(System.out);
+                return;
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -54,7 +55,7 @@ public class Main {
 
     static void type(String[] input) {
         String[] validCmds = {"exit", "type", "echo"};
-        String path = getPath(input[0]);
+        String path = getPath(input[1]);
 
         if (path != null) {
             System.out.println(input[1] + " is " + path);
