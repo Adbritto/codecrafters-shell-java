@@ -30,7 +30,7 @@ public class Main {
     static void type(String[] input) {
         String[] validCmds = {"exit", "type", "echo"};
         String pathInput = System.getenv("PATH");
-        String[] pathCommands = pathInput.split(";");
+        String[] pathCommands = pathInput.split(":");
 
         for (String s: validCmds) {
             if (input[1].equals(s)) {
