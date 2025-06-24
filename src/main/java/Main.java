@@ -10,5 +10,7 @@ public class Main {
             if (input.trim().equals("exit 0")) break;
             System.out.println(input + ": command not found");
         }
+
+        System.out.print("$ ");
     }
 }
