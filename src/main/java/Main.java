@@ -9,7 +9,7 @@ public class Main {
             String input = scanner.nextLine();
             if (input.trim().equals("exit 0")) {
                 break;
-            } else if (input.trim().contentEquals("echo")) {
+            } else if (input.trim().contains("echo")) {
                 System.out.println(input.substring(0, 4));
             } else {
                 System.out.println(input + ": command not found");
