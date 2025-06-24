@@ -29,7 +29,7 @@ public class Main {
     static void type(String[] input) {
         String[] validCmds = {"exit", "type", "echo"};
         if (search(validCmds, input[1])) {
-            System.out.println(input[1] + "is a shell builtin");
+            System.out.println(input[1] + " is a shell builtin");
         } else {
             System.out.println(input[1] + ": not found");
         }
