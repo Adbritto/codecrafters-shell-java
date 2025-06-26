@@ -46,7 +46,9 @@ public class Main {
 			Path targetDir = Path.of(path);
 			Path cwd = Path.of(System.getProperty("user.dir"));
 			Path p = cwd.resolve(targetDir);
-			if (Files.isDirectory(p)) {
+			if (path.equals("~")) {
+				System.setProperty("user.dir", System.getProperty("user.home"));
+			} else if (Files.isDirectory(p)) {
 				System.setProperty("user.dir", p.toAbsolutePath().normalize().toString());
 			} else {
 				System.out.println("cd: " + path + ": No such file or directory");
