@@ -43,17 +43,16 @@ public class Main {
 
 	static void cd(String path) {
 		try {
-			File file = new File(path);
-			if (!file.createNewFile()) {
-				file.delete();
-				System.setProperty("user.dir", path);
+			Path targetDir = Path.of(path);
+			Path cwd = Path.of(System.getProperty("user.dir"));
+			Path p = cwd.resolve(targetDir);
+			if (Files.isDirectory(p)) {
+				System.setProperty("user.dir", p.toAbsolutePath().normalize().toString());
 			} else {
 				System.out.println("cd: " + path + ": No such file or directory");
 			}
 		} catch (NullPointerException npe) {
 			System.out.println("cd: " + path + ": No such file or directory");
-		} catch (IOException ioe) {
-			throw new RuntimeException(ioe);
 		}
 	}
 
