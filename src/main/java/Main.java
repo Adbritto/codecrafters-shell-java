@@ -46,6 +46,7 @@ public class Main {
 		try {
 			if (path.contentEquals("~")) {
 				System.setProperty("user.dir", System.getenv("HOME"));
+				return;
 			}
 			Path targetDir = Path.of(path);
 			Path cwd = Path.of(System.getProperty("user.dir"));
