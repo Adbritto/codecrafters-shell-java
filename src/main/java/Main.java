@@ -38,7 +38,7 @@ public class Main {
 	}
 
 	static void echo(String input) {
-		System.out.println(input.substring(5));
+		System.out.println(input);
 	}
 
 	static void cd(String path) {
