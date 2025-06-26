@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,12 +44,13 @@ public class Main {
 
 	static void cd(String path) {
 		try {
+			if (path.contentEquals("~")) {
+				System.setProperty("user.dir", System.getenv("HOME"));
+			}
 			Path targetDir = Path.of(path);
 			Path cwd = Path.of(System.getProperty("user.dir"));
 			Path p = cwd.resolve(targetDir);
-			if (path.equals("~")) {
-				System.setProperty("user.dir", System.getProperty("user.home"));
-			} else if (Files.isDirectory(p)) {
+			if (Files.isDirectory(p)) {
 				System.setProperty("user.dir", p.toAbsolutePath().normalize().toString());
 			} else {
 				System.out.println("cd: " + path + ": No such file or directory");
