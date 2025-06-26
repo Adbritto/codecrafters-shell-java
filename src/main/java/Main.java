@@ -5,70 +5,75 @@ import java.nio.file.Path;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
-        Scanner scanner = new Scanner(System.in);
+	public static void main(String[] args) throws Exception {
+		Scanner scanner = new Scanner(System.in);
 
-        while(true) {
-            System.out.print("$ ");
-            String input = scanner.nextLine();
-            String[] commands = input.split(" ");
+		while(true) {
+			System.out.print("$ ");
+			String input = scanner.nextLine();
+			String[] commands = input.split(" ");
 
-            switch (commands[0]) {
-                case "exit" -> System.exit(Integer.parseInt(commands[1]));
-                case "type" -> type(commands);
-                case "echo" -> echo(input);
-                default -> printCNF(commands);
-            }
-        }
-    }
+			switch (commands[0]) {
+				case "exit" -> System.exit(Integer.parseInt(commands[1]));
+				case "type" -> type(commands);
+				case "echo" -> echo(input);
+				case "pwd" -> pwd();
+				default -> printCNF(commands);
+			}
+		}
+	}
 
-    static void echo(String input) {
-        System.out.println(input.substring(5));
-    }
+	static void echo(String input) {
+		System.out.println(input.substring(5));
+	}
 
-    static void printCNF(String[] input) {
-        if (getPath(input[0]) != null) {
-            try {
-                Process process = Runtime.getRuntime().exec(input);
-                process.getInputStream().transferTo(System.out);
-                return;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+	static void pwd() {
+		System.out.println(System.getProperty("user.dir"));
+	}
 
-        System.err.println(input[0] + ": command not found");
-    }
+	static void printCNF(String[] input) {
+		if (getPath(input[0]) != null) {
+			try {
+				Process process = Runtime.getRuntime().exec(input);
+				process.getInputStream().transferTo(System.out);
+				return;
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
 
-    static String getPath(String input) {
-        String pathInput = System.getenv("PATH");
-        String[] pathCommands = pathInput.split(File.pathSeparator);
+		System.err.println(input[0] + ": command not found");
+	}
 
-        for (String p: pathCommands) {
-            Path fullPath = Path.of(p, input);
-            if (Files.isRegularFile(fullPath)) {
-                return fullPath.toString();
-            }
-        }
-        return null;
-    }
+	static String getPath(String input) {
+		String pathInput = System.getenv("PATH");
+		String[] pathCommands = pathInput.split(File.pathSeparator);
 
-    static void type(String[] input) {
-        String[] validCmds = {"exit", "type", "echo"};
-        String path = getPath(input[1]);
+		for (String p: pathCommands) {
+			Path fullPath = Path.of(p, input);
+			if (Files.isRegularFile(fullPath)) {
+				return fullPath.toString();
+			}
+		}
+		return null;
+	}
+
+	static void type(String[] input) {
+		String[] validCmds = {"exit", "type", "echo", "pwd"};
+		String path = getPath(input[1]);
 
 
-        for (String s: validCmds) {
-            if (input[1].equals(s)) {
-                System.out.println(input[1] + " is a shell builtin");
-                return;
-            }
-        }
+		for (String s: validCmds) {
+			if (input[1].equals(s)) {
+				System.out.println(input[1] + " is a shell builtin");
+				return;
+			}
+		}
 
-        if (path != null) {
-            System.out.println(input[1] + " is " + path);
-            return;
-        }
-        System.out.println(input[1] + ": not found");
-    }
+		if (path != null) {
+			System.out.println(input[1] + " is " + path);
+			return;
+		}
+		System.out.println(input[1] + ": not found");
+	}
 }
